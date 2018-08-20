@@ -50,11 +50,21 @@ public class ConfigurationHelper {
     }
   }
 
-  public String getPlatformUrl(){
+  public String getPlatformUrl() {
 //    if(!configUrl.isEmpty()&&configUrl.size()>){
 //
 //    }
     return "";
+  }
+
+  public String getLoadUrl(int platform, String keyword) {
+    String url = "";
+    //list不为空  平台码不为-1  关键字不为空
+    if (configUrl != null && !configUrl.isEmpty() && platform != -1 && !TextUtils.isEmpty(keyword)) {
+      String s = configUrl.get(platform);
+      url = String.format(s, keyword);
+    }
+    return url;
   }
 
 }

@@ -7,6 +7,7 @@ import android.view.View.OnClickListener;
 import android.widget.TextView;
 import com.bnb.webhandler.base.BaseActivity;
 import com.bnb.webhandler.bean.ConfigurationBean;
+import com.bnb.webhandler.event.ClearWebEvent;
 import com.bnb.webhandler.event.StartActionEvent;
 import com.bnb.webhandler.fragment.WebFragment;
 import com.bnb.webhandler.helper.ConfigurationHelper;
@@ -19,6 +20,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
 
   private TextView mStart;
   private TextView mConfig;
+  private TextView mClear;
   private WebFragment mWebFragment;
 
 
@@ -32,9 +34,11 @@ public class MainActivity extends BaseActivity implements OnClickListener {
     super.findView();
     mStart = findViewById(R.id.tv_action_start);
     mConfig = findViewById(R.id.tv_action_config);
+    mClear = findViewById(R.id.tv_action_clear);
 
     mStart.setOnClickListener(this);
     mConfig.setOnClickListener(this);
+    mClear.setOnClickListener(this);
   }
 
   @Override
@@ -69,10 +73,7 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             .setOnActionListener(new OnActionListener() {
               @Override
               public void onSure(final int platform, final String keyword) {
-                ConfigurationBean bean = new ConfigurationBean();
-                bean.setPlatform(platform);
-                bean.setKeyword(keyword);
-                ConfigurationHelper.getInstance().saveConfigurationInfo(bean);
+                saveNewConfig(platform, keyword);
               }
 
               @Override
@@ -82,7 +83,17 @@ public class MainActivity extends BaseActivity implements OnClickListener {
             })
             .show();
         break;
+      case R.id.tv_action_clear:
+        EventUtil.post(new ClearWebEvent());
+        break;
     }
+  }
+
+  private void saveNewConfig(int platform, String keyword) {
+    ConfigurationBean bean = new ConfigurationBean();
+    bean.setPlatform(platform);
+    bean.setKeyword(keyword);
+    ConfigurationHelper.getInstance().saveConfigurationInfo(bean);
   }
 
   @Override

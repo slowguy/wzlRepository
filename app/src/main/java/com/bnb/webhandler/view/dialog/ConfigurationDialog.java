@@ -79,6 +79,7 @@ public class ConfigurationDialog extends BaseDialog implements OnClickListener {
         String keyword = getKeyword();
         if (checkedPlatform == -1 || TextUtils.isEmpty(keyword)) {
           ToastHelper.showShortToast(mContext.getString(R.string.info_error));
+          return;
         }
         if (mListener != null) {
           mListener.onSure(checkedPlatform, keyword);

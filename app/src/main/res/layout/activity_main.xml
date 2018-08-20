@@ -38,6 +38,18 @@
     android:text="CONFIG"
     android:textColor="#fff"/>
 
+  <TextView
+    android:id="@+id/tv_action_clear"
+    android:layout_width="60dp"
+    android:layout_height="60dp"
+    android:layout_marginBottom="15dp"
+    android:layout_marginRight="35dp"
+    android:layout_above="@id/tv_action_config"
+    android:layout_alignParentRight="true"
+    android:background="@drawable/shape_oval_main_clear"
+    android:gravity="center"
+    android:text="CLEAR"
+    android:textColor="#fff"/>
 
 </RelativeLayout>
 

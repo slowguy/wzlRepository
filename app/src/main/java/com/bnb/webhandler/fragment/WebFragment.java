@@ -18,9 +18,13 @@ import android.webkit.WebView;
 import android.webkit.WebViewClient;
 import com.bnb.webhandler.R;
 import com.bnb.webhandler.base.MyApplication;
+import com.bnb.webhandler.bean.ConfigurationBean;
+import com.bnb.webhandler.event.ClearWebEvent;
 import com.bnb.webhandler.event.StartActionEvent;
+import com.bnb.webhandler.helper.ConfigurationHelper;
 import com.bnb.webhandler.utils.EventUtil;
 import com.bnb.webhandler.utils.ToastHelper;
+import com.victor.loading.book.BookLoading;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
@@ -30,6 +34,10 @@ public class WebFragment extends Fragment {
 
   private View mContentView;
   private WebView mWeb;
+  private String mKeyword;
+  private int mPlatform;
+  private long mDelayTime;
+  private BookLoading mLoading;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -62,6 +70,7 @@ public class WebFragment extends Fragment {
 
   private void findView() {
     mWeb = mContentView.findViewById(R.id.wv_content_web);
+    mLoading = mContentView.findViewById(R.id.rl_loading);
   }
 
   private void initWebview() {
@@ -83,11 +92,12 @@ public class WebFragment extends Fragment {
     mWeb.setWebChromeClient(new MyWebChrome());
   }
 
-  @Subscribe(threadMode = ThreadMode.MAIN)
-  public void onStartActionEvent(StartActionEvent event) {
-    ToastHelper.showShortToast("start action");
-
+  private void refreshWeb() {
+    ToastHelper.showShortToast("load url!");
+//    mLoading.setVisibility(View.VISIBLE);
+    mWeb.loadUrl(ConfigurationHelper.getInstance().getLoadUrl(mPlatform, mKeyword));
   }
+
 
   @Override
   public void onDestroy() {
@@ -110,8 +120,10 @@ public class WebFragment extends Fragment {
     @Override
     public void onPageFinished(WebView view, String url) {
       super.onPageFinished(view, url);
+      if (mLoading != null && mLoading.getVisibility() == View.VISIBLE) {
+        mLoading.setVisibility(View.GONE);
+      }
     }
-
   }
 
   class MyWebChrome extends WebChromeClient {
@@ -123,4 +135,27 @@ public class WebFragment extends Fragment {
     }
   }
 
+  /**
+   * 点击start按钮
+   */
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onStartActionEvent(StartActionEvent event) {
+//    ToastHelper.showShortToast("start action");
+    ConfigurationBean configurationInfo = ConfigurationHelper.getInstance().getConfigurationInfo();
+    if (configurationInfo != null) {
+      mKeyword = configurationInfo.getKeyword();
+      mPlatform = configurationInfo.getPlatform();
+      mDelayTime = configurationInfo.getDelayTime();
+      refreshWeb();
+    }
+  }
+
+  /**
+   * 清除WebView内容
+   */
+  @Subscribe(threadMode = ThreadMode.MAIN)
+  public void onWebClearEvent(ClearWebEvent event) {
+//    mWeb.clearView();
+    mWeb.loadUrl("");
+  }
 }
