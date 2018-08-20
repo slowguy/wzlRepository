@@ -1,0 +1,14 @@
+<resources>
+  <string name="app_name">webhandler</string>
+
+  <string name="platform_baidu">百度</string>
+  <string name="platform_sougou">搜狗</string>
+  <string name="platform_google">谷歌</string>
+
+  <string name="keyword">关键字</string>
+  <string name="clear_cookie">清除cookie</string>
+  <string name="sure">确定</string>
+  <string name="cancel">取消</string>
+
+  <string name="info_error">配置不正确或信息不足</string>
+</resources>
