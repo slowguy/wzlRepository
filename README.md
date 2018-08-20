@@ -1,1 +1,1 @@
-what you have seen is just illusion
+All you see is just an illusion
