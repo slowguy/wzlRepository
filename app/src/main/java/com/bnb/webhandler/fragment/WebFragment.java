@@ -21,6 +21,7 @@ import com.bnb.webhandler.base.MyApplication;
 import com.bnb.webhandler.bean.ConfigurationBean;
 import com.bnb.webhandler.event.ClearWebEvent;
 import com.bnb.webhandler.event.StartActionEvent;
+import com.bnb.webhandler.executor.JsExecutorHelper;
 import com.bnb.webhandler.helper.ConfigurationHelper;
 import com.bnb.webhandler.utils.EventUtil;
 import com.bnb.webhandler.utils.ToastHelper;
@@ -34,10 +35,12 @@ public class WebFragment extends Fragment {
 
   private View mContentView;
   private WebView mWeb;
+  private BookLoading mLoading;
+  private View mBlock;
+
   private String mKeyword;
   private int mPlatform;
   private long mDelayTime;
-  private BookLoading mLoading;
 
   @Override
   public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class WebFragment extends Fragment {
   private void findView() {
     mWeb = mContentView.findViewById(R.id.wv_content_web);
     mLoading = mContentView.findViewById(R.id.rl_loading);
+    mBlock = mContentView.findViewById(R.id.finger_block);
   }
 
   private void initWebview() {
@@ -120,6 +124,7 @@ public class WebFragment extends Fragment {
     @Override
     public void onPageFinished(WebView view, String url) {
       super.onPageFinished(view, url);
+      Log.e(TAG, "onPageFinished -> " + url);
       if (mLoading != null && mLoading.getVisibility() == View.VISIBLE) {
         mLoading.setVisibility(View.GONE);
       }
@@ -131,7 +136,7 @@ public class WebFragment extends Fragment {
     @Override
     public void onReceivedTitle(WebView view, String title) {
       super.onReceivedTitle(view, title);
-      Log.e(TAG, "title -> " + title);
+//      Log.e(TAG, "title -> " + title);
     }
   }
 
@@ -156,6 +161,7 @@ public class WebFragment extends Fragment {
   @Subscribe(threadMode = ThreadMode.MAIN)
   public void onWebClearEvent(ClearWebEvent event) {
 //    mWeb.clearView();
-    mWeb.loadUrl("");
+//    mWeb.loadUrl("");
+    mWeb.loadUrl(JsExecutorHelper.scrollJs("100"));
   }
 }
